@@ -1,0 +1,20 @@
+services:
+  typescript-app:
+    build: .
+    container_name: typescript-app
+    command: npm run start
+    ports:
+      - "9000:9000"
+    environment:
+      - PARTNER_SERVICE_URL=ws://partner-service:8032
+    depends_on:
+      - partner-service
+
+  partner-service:
+    image: openjdk:17
+    container_name: partner-service
+    command: sh -c "cd /app && java -jar partner-service-1.0.1-all.jar --port=8032"
+    volumes:
+      - ./:/app
+    ports:
+      - "8032:8032"
